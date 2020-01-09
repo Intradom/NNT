@@ -54,7 +54,7 @@ public class Behavior_NN : MonoBehaviour
         }
         NN_weights.Add(h2o_layer_list);
 
-        DebugWeights();
+        //DebugWeights();
         return proper;
     }
 
@@ -67,7 +67,34 @@ public class Behavior_NN : MonoBehaviour
             return false;
         }
 
+        List<float> pass_container = new List<float>(Mathf.Max(hidden_layer_size, Mathf.Max(input_size, output_size)));
+        for (int i = 0; i < input_size; ++i)
+        {
+            pass_container[i] = input[i];
+        }
 
+        // Network
+        for (int i = 0; i < NN_weights.Count; ++i)
+        {
+            List<float> old_pass_container = new List<float>(pass_container); // Clones
+
+            // Layer
+            for (int j = 0; j < NN_weights[i].Count; ++j)
+            {
+                pass_container[j] = 0;
+                // Node
+                for (int k = 0; k < NN_weights[i][j].weights.Count; ++k)
+                {
+                    pass_container[j] += NN_weights[i][j].weights[k] * old_pass_container[k];
+                }
+                pass_container[j] += NN_weights[i][j].bias;
+            }
+        }
+
+        for (int i = 0; i < output_size; ++i)
+        {
+            output[i] = pass_container[i];
+        }
 
         return true;
     }
@@ -100,10 +127,10 @@ public class Behavior_NN : MonoBehaviour
         List<float> rlist = new List<float>();
         for (int i = 0; i < size; ++i)
         {
-            rlist.Add(Random.value);
+            rlist.Add(Random.value * 2 - 1);
         }
         node.weights = rlist;
-        node.bias = Random.value;
+        node.bias = Random.value * 2 - 1;
 
         return node;
     }
