@@ -5,19 +5,30 @@ using UnityEngine;
 public class Behavior_Player : MonoBehaviour
 {
     [SerializeField] private GameObject ref_GC = null;
+    [SerializeField] private GameObject ref_NN = null;
     [SerializeField] private string tag_harmful = null;
     [SerializeField] private float start_speed = 0;
+    [SerializeField] private int direction_check_rays = 8;
     [SerializeField] private bool player_control = false;
 
     private Rigidbody2D self_rbody = null;
     private Behavior_Game_Controller ref_GC_script = null;
+    private Behavior_NN ref_NN_script = null;
     private float current_speed = 0;
     private float current_direction = 0; // Radians
+
+    private const int NN_OUTPUTS = 2; // direction and speed
 
     private void Awake()
     {
         self_rbody = this.GetComponent<Rigidbody2D>();
         ref_GC_script = ref_GC.GetComponent<Behavior_Game_Controller>();
+        ref_NN_script = ref_NN.GetComponent<Behavior_NN>();
+    }
+
+    private void Start()
+    {
+        ref_NN_script.Init(direction_check_rays, NN_OUTPUTS);
     }
 
     private void Update()

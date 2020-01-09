@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Behavior_Game_Controller : MonoBehaviour
 {
-    static Behavior_Game_Controller self_GC; // Singleton
+    private static Behavior_Game_Controller self_GC; // Singleton
 
     public void EndRound()
     {
