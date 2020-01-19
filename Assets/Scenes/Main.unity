@@ -303,9 +303,11 @@ MonoBehaviour:
   ref_GC: {fileID: 416256520}
   ref_NN: {fileID: 426573170}
   tag_harmful: Harmful
+  layer_mask_harmful: Avoid
   start_speed: 250
-  direction_check_rays: 8
-  player_control: 1
+  direction_check_rays: 16
+  player_control: 0
+  draw_rays: 1
 --- !u!58 &459458206
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -580,7 +582,7 @@ GameObject:
   - component: {fileID: 1236654582}
   - component: {fileID: 1236654584}
   - component: {fileID: 1236654585}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Harmful
   m_Icon: {fileID: 0}

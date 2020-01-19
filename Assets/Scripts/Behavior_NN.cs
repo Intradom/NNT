@@ -58,16 +58,19 @@ public class Behavior_NN : MonoBehaviour
         return proper;
     }
 
-    public bool FF_Pass(ref float[] input, ref float[] output)
+    public bool FF_Pass(ref List<float> input, ref List<float> output)
     {
+        //Debug.Log("In: " + input.Count);
+        //Debug.Log("Out: " + output.Count);
         // Make sure the input/output matches the NN dimensions
-        if (input.Length != input_size || output.Length != output_size)
+        if (input.Count != input_size || output.Count != output_size)
         {
             Debug.Log("FF_Pass input/output size mismatch");
             return false;
         }
 
-        List<float> pass_container = new List<float>(Mathf.Max(hidden_layer_size, Mathf.Max(input_size, output_size)));
+        List<float> pass_container = new List<float>(new float [Mathf.Max(hidden_layer_size, Mathf.Max(input_size, output_size))]);
+
         for (int i = 0; i < input_size; ++i)
         {
             pass_container[i] = input[i];
