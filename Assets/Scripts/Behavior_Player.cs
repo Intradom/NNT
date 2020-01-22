@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Behavior_Player : MonoBehaviour
 {
-    [SerializeField] private GameObject ref_GC = null;
-    [SerializeField] private GameObject ref_NN = null;
+    //[SerializeField] private GameObject ref_GC = null;
+    //[SerializeField] private GameObject ref_NN = null;
     [SerializeField] private string tag_harmful = null;
     [SerializeField] private string layer_mask_harmful = null;
     [SerializeField] private float start_speed = 0;
@@ -51,12 +51,14 @@ public class Behavior_Player : MonoBehaviour
     private void Awake()
     {
         self_rbody = this.GetComponent<Rigidbody2D>();
-        ref_GC_script = ref_GC.GetComponent<Behavior_Game_Controller>();
-        ref_NN_script = ref_NN.GetComponent<Behavior_NN>();
     }
 
     private void Start()
     {
+        // Attach this references in Start() since they are Singletons which instances may be destroyed in Awake()
+        ref_GC_script = FindObjectOfType<Behavior_Game_Controller>(); //ref_GC.GetComponent<Behavior_Game_Controller>();
+        ref_NN_script = FindObjectOfType<Behavior_NN>(); //ref_NN.GetComponent<Behavior_NN>();
+
         ref_NN_script.Init(direction_check_rays, NN_OUTPUTS);
     }
 
@@ -89,7 +91,7 @@ public class Behavior_Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float move_amount = current_speed * Time.fixedDeltaTime;
+        float move_amount = current_speed * Time.fixedDeltaTime; // Multiplying by deltaTime adds in randomness, but NN should be able to overcome it
         self_rbody.AddForce(new Vector2(Mathf.Cos(current_direction) * move_amount, Mathf.Sin(current_direction) * move_amount));
     }
 

@@ -21,6 +21,13 @@ public class Behavior_NN : MonoBehaviour
 
     public bool Init(int input_layer_size, int output_layer_size)
     {
+        // If NN already has been initialized, no need to reset it
+        if (proper)
+        {
+            return false;
+        }
+
+        Debug.Log("NN Init" + this.gameObject.GetInstanceID());
         proper = (input_layer_size > 0) && (output_layer_size > 0);
         input_size = input_layer_size;
         output_size = output_layer_size;
@@ -140,15 +147,17 @@ public class Behavior_NN : MonoBehaviour
 
     private void Awake()
     {
+        //Debug.Log("NN Awake" + this.GetInstanceID());
         // Creates only one copy of GC, otherwise not destroying on game load would create duplicates
         if (self_NN == null)
         {
             DontDestroyOnLoad(this.gameObject);
-
+            
             self_NN = this;
         }
         else
         {
+            //Debug.Log("NN Awake Destroy");
             Destroy(this.gameObject);
         }
     }
