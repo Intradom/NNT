@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Behavior_Player : MonoBehaviour
 {
-    //[SerializeField] private GameObject ref_GC = null;
+    [SerializeField] private GameObject ref_GC = null;
     //[SerializeField] private GameObject ref_NN = null;
     [SerializeField] private string tag_harmful = null;
     [SerializeField] private string layer_mask_harmful = null;
@@ -18,6 +18,7 @@ public class Behavior_Player : MonoBehaviour
     private Behavior_NN ref_NN_script = null;
     private float current_speed = 0;
     private float current_direction = 0; // Radians
+    private float start_time = 0;
 
     private const int NN_OUTPUTS = 2; // direction and speed
 
@@ -51,15 +52,20 @@ public class Behavior_Player : MonoBehaviour
     private void Awake()
     {
         self_rbody = this.GetComponent<Rigidbody2D>();
+        ref_GC_script = ref_GC.GetComponent<Behavior_Game_Controller>();
     }
 
     private void Start()
     {
         // Attach this references in Start() since they are Singletons which instances may be destroyed in Awake()
-        ref_GC_script = FindObjectOfType<Behavior_Game_Controller>(); //ref_GC.GetComponent<Behavior_Game_Controller>();
+        //ref_GC_script = FindObjectOfType<Behavior_Game_Controller>(); 
         ref_NN_script = FindObjectOfType<Behavior_NN>(); //ref_NN.GetComponent<Behavior_NN>();
 
         ref_NN_script.Init(direction_check_rays, NN_OUTPUTS);
+
+        ref_GC_script.StartRound(ref_NN_script.GetIteration(), ref_NN_script.GetBestFit());
+
+        start_time = Time.time;
     }
 
     private void Update()
@@ -91,7 +97,7 @@ public class Behavior_Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float move_amount = current_speed * Time.fixedDeltaTime; // Multiplying by deltaTime adds in randomness, but NN should be able to overcome it
+        float move_amount = current_speed * Time.fixedDeltaTime;
         self_rbody.AddForce(new Vector2(Mathf.Cos(current_direction) * move_amount, Mathf.Sin(current_direction) * move_amount));
     }
 
@@ -100,6 +106,7 @@ public class Behavior_Player : MonoBehaviour
         if (collision.gameObject.tag == tag_harmful)
         {
             // End current game
+            ref_NN_script.IterationFinish(Time.time - start_time);
             ref_GC_script.EndRound();
         }
     }

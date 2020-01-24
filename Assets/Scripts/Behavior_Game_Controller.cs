@@ -1,11 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Behavior_Game_Controller : MonoBehaviour
 {
-    private static Behavior_Game_Controller self_GC; // Singleton
+    [SerializeField] private Text ref_text = null;
+
+    //private static Behavior_Game_Controller self_GC; // Singleton
+
+    public void StartRound(int iteration, float best_fitness)
+    {
+        ref_text.text = "Iteration: " + iteration;
+        ref_text.text += "\nBest Fit: " + best_fitness;
+    }
 
     public void EndRound()
     {
@@ -14,6 +23,7 @@ public class Behavior_Game_Controller : MonoBehaviour
 
     private void Awake()
     {
+        /*
         // Creates only one copy of GC, otherwise not destroying on game load would create duplicates
         if (self_GC == null)
         {
@@ -25,5 +35,6 @@ public class Behavior_Game_Controller : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        */
     }
 }
